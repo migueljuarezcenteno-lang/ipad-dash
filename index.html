@@ -2,243 +2,227 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>iLegacy OS v9 Hybrid</title>
+<meta name="viewport" content="width=device-width">
+<title>iLegacy OS v10</title>
 
 <style>
 body{
-    margin:0;
-    font-family:Arial;
-    background:#000;
-    color:#fff;
+margin:0;
+font-family:Arial;
+background:#000;
+color:#0f0;
+font-size:14px;
 }
 
-/* HEADER */
+/* ultra simple */
 .header{
-    text-align:center;
-    padding:10px;
-    font-size:20px;
-    border-bottom:1px solid #333;
+padding:5px;
+border-bottom:1px solid #0f0;
+text-align:center;
 }
 
-/* GRID */
-.grid{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    padding:10px;
+.menu div{
+padding:10px;
+border-bottom:1px solid #033;
 }
 
-.app{
-    width:80px;
-    margin:10px;
-    text-align:center;
-    font-size:12px;
-    cursor:pointer;
-}
-
-.app div{
-    width:50px;
-    height:50px;
-    margin:auto;
-    background:#222;
-    border-radius:10px;
-    line-height:50px;
-}
-
-/* PANTALLAS */
 .screen{
-    display:none;
-    padding:10px;
+display:none;
+padding:10px;
 }
 
 .active{
-    display:block;
+display:block;
 }
 
-/* BOTON VOLVER */
-.back{
-    margin-bottom:10px;
-    display:inline-block;
-    padding:5px 10px;
-    background:#333;
-}
-
-/* INPUT */
 input, textarea{
-    width:100%;
-    padding:5px;
-    margin-top:5px;
-    background:#111;
-    color:#fff;
-    border:1px solid #333;
+width:100%;
+background:#000;
+color:#0f0;
+border:1px solid #0f0;
+padding:5px;
+}
+
+button{
+background:#000;
+color:#0f0;
+border:1px solid #0f0;
+padding:5px;
+margin-top:5px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header" id="clock">00:00</div>
+<div class="header" id="clock">--:--</div>
 
 <!-- HOME -->
 <div id="home" class="active">
+<div class="menu">
 
-<div class="grid">
-
-<div class="app" onclick="openApp('youtube')">
-<div>▶</div>YouTube
-</div>
-
-<div class="app" onclick="openApp('maps')">
-<div>📍</div>Maps
-</div>
-
-<div class="app" onclick="openApp('facebook')">
-<div>f</div>Facebook
-</div>
-
-<div class="app" onclick="openApp('browser')">
-<div>🌐</div>Navegador
-</div>
-
-<div class="app" onclick="openApp('music')">
-<div>♪</div>Música
-</div>
-
-<div class="app" onclick="openApp('notes')">
-<div>✎</div>Notas
-</div>
-
-<div class="app" onclick="openApp('calc')">
-<div>=</div>Calc
-</div>
+<div onclick="openApp('files')">📂 Archivos</div>
+<div onclick="openApp('music')">🎵 Música</div>
+<div onclick="openApp('yt')">📺 YouTube</div>
+<div onclick="openApp('msg')">💬 Mensajes</div>
+<div onclick="openApp('notes')">📝 Notas</div>
+<div onclick="openApp('browser')">🌐 Navegador</div>
 
 </div>
 </div>
 
-<!-- YOUTUBE -->
-<div id="youtube" class="screen">
-<div class="back" onclick="home()">← Volver</div>
-<h3>YouTube Lite</h3>
+<!-- FILES -->
+<div id="files" class="screen">
+<button onclick="home()">←</button>
+<h3>Archivos</h3>
 
-<a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">▶ Video 1</a><br><br>
-<a href="https://www.youtube.com/watch?v=ysz5S6PUM-U">▶ Video 2</a>
+<input id="fileName" placeholder="nombre">
+<textarea id="fileContent" placeholder="contenido"></textarea>
+<button onclick="saveFile()">Guardar</button>
 
-</div>
-
-<!-- MAPS -->
-<div id="maps" class="screen">
-<div class="back" onclick="home()">← Volver</div>
-<h3>Maps Lite</h3>
-
-<input placeholder="Buscar lugar..." id="mapInput">
-<button onclick="goMap()">Buscar</button>
-
-</div>
-
-<!-- FACEBOOK -->
-<div id="facebook" class="screen">
-<div class="back" onclick="home()">← Volver</div>
-<h3>Facebook Lite</h3>
-
-<a href="https://mbasic.facebook.com">Abrir Facebook</a>
-
-</div>
-
-<!-- BROWSER -->
-<div id="browser" class="screen">
-<div class="back" onclick="home()">← Volver</div>
-<h3>Navegador</h3>
-
-<input id="url" placeholder="Buscar o escribir URL">
-<button onclick="go()">Ir</button>
-
+<div id="fileList"></div>
 </div>
 
 <!-- MUSIC -->
 <div id="music" class="screen">
-<div class="back" onclick="home()">← Volver</div>
+<button onclick="home()">←</button>
 <h3>Música</h3>
 
-<audio controls>
-<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
-</audio>
+<div onclick="play(0)">▶ Track 1</div>
+<div onclick="play(1)">▶ Track 2</div>
 
+<audio id="player" controls></audio>
+</div>
+
+<!-- YOUTUBE -->
+<div id="yt" class="screen">
+<button onclick="home()">←</button>
+<h3>YouTube Lite</h3>
+
+<input id="ytSearch" placeholder="buscar">
+<button onclick="ytGo()">Buscar</button>
+
+<div id="ytResults"></div>
+</div>
+
+<!-- MENSAJES -->
+<div id="msg" class="screen">
+<button onclick="home()">←</button>
+<h3>Mensajes Offline</h3>
+
+<input id="msgInput">
+<button onclick="sendMsg()">Enviar</button>
+
+<div id="chat"></div>
 </div>
 
 <!-- NOTES -->
 <div id="notes" class="screen">
-<div class="back" onclick="home()">← Volver</div>
+<button onclick="home()">←</button>
 <h3>Notas</h3>
 
 <textarea id="note"></textarea>
 <button onclick="saveNote()">Guardar</button>
-
 </div>
 
-<!-- CALC -->
-<div id="calc" class="screen">
-<div class="back" onclick="home()">← Volver</div>
-<h3>Calculadora</h3>
+<!-- BROWSER -->
+<div id="browser" class="screen">
+<button onclick="home()">←</button>
+<h3>Navegador Lite</h3>
 
-<input id="calcInput">
-<button onclick="calc()">=</button>
-
-<div id="result"></div>
+<input id="url">
+<button onclick="go()">Ir</button>
 </div>
 
 <script>
 
-// reloj
+/* reloj */
 setInterval(function(){
-    var d=new Date();
-    document.getElementById("clock").innerHTML=
-    d.getHours()+":"+("0"+d.getMinutes()).slice(-2);
+var d=new Date();
+document.getElementById("clock").innerHTML=
+d.getHours()+":"+("0"+d.getMinutes()).slice(-2);
 },1000);
 
-// navegación
+/* navegación */
 function openApp(id){
-    var s=document.getElementsByClassName("screen");
-    for(var i=0;i<s.length;i++) s[i].style.display="none";
-    document.getElementById("home").style.display="none";
-    document.getElementById(id).style.display="block";
+var s=document.getElementsByClassName("screen");
+for(var i=0;i<s.length;i++) s[i].style.display="none";
+document.getElementById("home").style.display="none";
+document.getElementById(id).style.display="block";
 }
 
 function home(){
-    var s=document.getElementsByClassName("screen");
-    for(var i=0;i<s.length;i++) s[i].style.display="none";
-    document.getElementById("home").style.display="block";
+var s=document.getElementsByClassName("screen");
+for(var i=0;i<s.length;i++) s[i].style.display="none";
+document.getElementById("home").style.display="block";
 }
 
-// navegador
-function go(){
-    var url=document.getElementById("url").value;
-    if(url.indexOf("http")!==0){
-        url="https://www.google.com/search?gbv=1&q="+url;
-    }
-    location.href=url;
+/* FILES (localStorage tipo sistema) */
+function saveFile(){
+var name=document.getElementById("fileName").value;
+var content=document.getElementById("fileContent").value;
+localStorage.setItem("file_"+name,content);
+loadFiles();
 }
 
-// maps
-function goMap(){
-    var q=document.getElementById("mapInput").value;
-    location.href="https://www.google.com/maps?q="+q+"&force=lite";
+function loadFiles(){
+var list="";
+for(var i in localStorage){
+if(i.indexOf("file_")==0){
+list+="<div onclick='openFile(\""+i+"\")'>"+i.replace("file_","")+"</div>";
+}
+}
+document.getElementById("fileList").innerHTML=list;
 }
 
-// notas
+function openFile(key){
+document.getElementById("fileName").value=key.replace("file_","");
+document.getElementById("fileContent").value=localStorage.getItem(key);
+}
+
+loadFiles();
+
+/* MUSIC */
+var tracks=[
+"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+];
+
+function play(i){
+document.getElementById("player").src=tracks[i];
+}
+
+/* YOUTUBE SIMULADO */
+function ytGo(){
+var q=document.getElementById("ytSearch").value;
+var url="https://www.youtube.com/results?search_query="+q;
+document.getElementById("ytResults").innerHTML=
+"<a href='"+url+"'>Ver resultados</a>";
+}
+
+/* MENSAJES OFFLINE */
+function sendMsg(){
+var msg=document.getElementById("msgInput").value;
+var chat=document.getElementById("chat");
+chat.innerHTML+="<div>> "+msg+"</div>";
+localStorage.setItem("chat",chat.innerHTML);
+}
+
+document.getElementById("chat").innerHTML=localStorage.getItem("chat")||"";
+
+/* NOTAS */
 function saveNote(){
-    localStorage.setItem("note",document.getElementById("note").value);
+localStorage.setItem("note",document.getElementById("note").value);
 }
 document.getElementById("note").value=localStorage.getItem("note")||"";
 
-// calculadora
-function calc(){
-    try{
-        var r=eval(document.getElementById("calcInput").value);
-        document.getElementById("result").innerHTML=r;
-    }catch(e){
-        document.getElementById("result").innerHTML="Error";
-    }
+/* BROWSER */
+function go(){
+var url=document.getElementById("url").value;
+if(url.indexOf("http")!==0){
+url="https://www.google.com/search?gbv=1&q="+url;
+}
+location.href=url;
 }
 
 </script>
