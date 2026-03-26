@@ -5,92 +5,119 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="iLegacy">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/564/564419.png">
-    <title>iLegacy OS</title>
+    
+    <title>iLegacy OS v7</title>
     <style>
         * { -webkit-tap-highlight-color: rgba(0,0,0,0); box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: "Helvetica Neue", Helvetica; }
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            overflow: hidden; background: #000; 
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+        }
         
-        /* Contenedor de la App */
-        #main-wrapper {
-            width: 1024px; height: 768px; /* Resolución nativa iPad Mini 1 */
-            background: url('https://wallpaperaccess.com/full/1150436.jpg') no-repeat center center;
+        /* Fondo optimizado (color sólido + imagen ligera para RAM) */
+        .main-container {
+            width: 100%; height: 100%;
+            background: #1a1a1a url('https://wallpaperaccess.com/full/1150436.jpg') no-repeat center center;
             background-size: cover;
-            position: relative;
+            display: -webkit-flex; display: flex;
+            -webkit-flex-direction: column; flex-direction: column;
         }
 
-        /* Reloj */
-        .header { text-align: center; padding-top: 60px; color: white; }
-        #clock { font-size: 100px; font-weight: 200; margin: 0; }
-        #date { font-size: 22px; opacity: 0.8; margin-top: -10px; }
+        /* Reloj Gigante */
+        .header { text-align: center; padding-top: 60px; color: white; -webkit-user-select: none; }
+        #clock { font-size: 100px; font-weight: 200; margin: 0; letter-spacing: -2px; }
+        #date { font-size: 20px; opacity: 0.8; margin-top: -10px; text-transform: capitalize; }
 
-        /* Grid de Iconos */
-        .grid { display: -webkit-flex; -webkit-flex-wrap: wrap; -webkit-justify-content: center; padding: 40px; }
-        .icon { width: 120px; text-align: center; margin: 15px; color: white; text-decoration: none; cursor: pointer; }
-        .icon img { width: 75px; height: 75px; border-radius: 18px; display: block; margin: 0 auto 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .icon span { font-size: 13px; font-weight: 500; text-shadow: 0 2px 4px #000; }
+        /* Grid de Aplicaciones */
+        .app-grid {
+            -webkit-flex: 1; flex: 1;
+            display: -webkit-flex; display: flex;
+            -webkit-flex-wrap: wrap; flex-wrap: wrap;
+            -webkit-justify-content: center; justify-content: center;
+            padding: 20px; overflow-y: auto;
+        }
 
-        /* VISOR DE APLICACIONES (El "Navegador" interno) */
-        #app-viewer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: white; display: none; z-index: 100;
+        .icon-card {
+            width: 110px; margin: 15px;
+            text-align: center; text-decoration: none; color: white;
+            display: block;
         }
-        #web-frame { width: 100%; height: 100%; border: none; }
-        
-        /* Botón Flotante para Salir (Estilo iOS) */
-        #btn-close {
-            position: absolute; bottom: 20px; left: 50%; margin-left: -25px;
-            width: 50px; height: 50px; background: rgba(0,0,0,0.5);
-            border: 2px solid white; border-radius: 50%; color: white;
-            font-size: 30px; line-height: 45px; text-align: center;
-            z-index: 200; display: none; cursor: pointer;
+
+        .icon-card img {
+            width: 70px; height: 70px; border-radius: 16px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.5);
+            margin-bottom: 8px;
         }
+
+        .icon-card span { font-size: 12px; font-weight: 500; text-shadow: 0 2px 4px #000; }
+
+        /* Feedback al tocar */
+        .icon-card:active { opacity: 0.5; -webkit-transform: scale(0.95); }
+
+        /* Dock Inferior */
+        .dock {
+            background: rgba(255, 255, 255, 0.2);
+            -webkit-backdrop-filter: blur(10px);
+            margin: 0 20px 20px; padding: 12px;
+            border-radius: 25px;
+            display: -webkit-flex; display: flex;
+            -webkit-justify-content: space-around; justify-content: space-around;
+        }
+        .dock .icon-card { width: 70px; margin: 0; }
+        .dock .icon-card img { width: 55px; height: 55px; }
     </style>
 </head>
 <body>
 
-<div id="main-wrapper">
+<div class="main-container">
     <div class="header">
         <div id="clock">00:00</div>
         <div id="date">...</div>
     </div>
 
-    <div class="grid">
-        <div class="icon" onclick="openApp('https://mbasic.facebook.com')">
+    <div class="app-grid">
+        <a href="https://mbasic.facebook.com" class="icon-card">
             <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png"><span>FB Lite</span>
-        </div>
-        <div class="icon" onclick="openApp('https://m.youtube.com/?app=m&persist_app=1')">
+        </a>
+        <a href="https://m.youtube.com/?app=m&persist_app=1" class="icon-card">
             <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png"><span>YouTube</span>
-        </div>
-        <div class="icon" onclick="openApp('https://baize.ai/chat')">
+        </a>
+        <a href="https://baize.ai/chat" class="icon-card">
             <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg"><span>AI Chat</span>
-        </div>
-        <div class="icon" onclick="openApp('https://web.telegram.org/k/')">
+        </a>
+        <a href="https://web.telegram.org/k/" class="icon-card">
             <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png"><span>Telegram</span>
-        </div>
-        <div class="icon" onclick="openApp('https://www.google.com/search?gbv=1')">
-            <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png"><span>Google</span>
-        </div>
-        <div class="icon" onclick="openApp('https://mail.google.com/mail/u/0/h/')">
-            <img src="https://cdn-icons-png.flaticon.com/512/5968/5968534.png"><span>Gmail</span>
-        </div>
-        <div class="icon" onclick="openApp('https://www.google.com/maps/?force=lite')">
+        </a>
+        <a href="https://mail.google.com/mail/u/0/h/" class="icon-card">
+            <img src="https://cdn-icons-png.flaticon.com/512/5968/5968534.png"><span>Gmail Lite</span>
+        </a>
+        <a href="https://www.google.com/maps?force=lite" class="icon-card">
             <img src="https://cdn-icons-png.flaticon.com/512/854/854878.png"><span>Maps Lite</span>
-        </div>
-        <div class="icon" onclick="openApp('https://radio.garden')">
+        </a>
+        <a href="https://www.retrogames.cc/" class="icon-card">
+            <img src="https://cdn-icons-png.flaticon.com/512/686/686589.png"><span>RetroGames</span>
+        </a>
+        <a href="https://radio.garden" class="icon-card">
             <img src="https://cdn-icons-png.flaticon.com/512/2301/2301145.png"><span>Radio</span>
-        </div>
+        </a>
+    </div>
+
+    <div class="dock">
+        <a href="https://www.google.com/search?gbv=1" class="icon-card">
+            <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png"><span>Google</span>
+        </a>
+        <a href="https://web.whatsapp.com/" class="icon-card">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png"><span>WhatsApp</span>
+        </a>
     </div>
 </div>
 
-<div id="app-viewer">
-    <iframe id="web-frame" src=""></iframe>
-</div>
-<div id="btn-close" onclick="closeApp()">×</div>
-
 <script>
-    // Reloj ES5 (Compatible con iOS 9)
-    function updateClock() {
+    // 1. Reloj y Fecha (ES5)
+    function updateTime() {
         var now = new Date();
         var h = now.getHours(), m = now.getMinutes();
         if (h < 10) h = "0" + h; if (m < 10) m = "0" + m;
@@ -99,20 +126,20 @@
         var months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
         document.getElementById('date').innerText = days[now.getDay()] + ", " + now.getDate() + " de " + months[now.getMonth()];
     }
-    setInterval(updateClock, 1000); updateClock();
+    setInterval(updateTime, 1000); updateTime();
 
-    // Lógica del "Navegador Independiente"
-    function openApp(url) {
-        document.getElementById('web-frame').src = url;
-        document.getElementById('app-viewer').style.display = 'block';
-        document.getElementById('btn-close').style.display = 'block';
-    }
-
-    function closeApp() {
-        document.getElementById('app-viewer').style.display = 'none';
-        document.getElementById('btn-close').style.display = 'none';
-        document.getElementById('web-frame').src = ''; // Limpia memoria
-    }
+    // 2. SCRIPT CRUCIAL: Evita que los enlaces salgan a Safari
+    // Esto mantiene la navegación dentro de la "App" que creaste.
+    (function(a, b, c) {
+        if (c in b && b[c]) {
+            var d, e = a.location, f = /^(a|html)$/i;
+            a.addEventListener("click", function(a) {
+                d = a.target;
+                while (!f.test(d.nodeName)) d = d.parentNode;
+                "href" in d && (d.href.indexOf("http") || ~d.href.indexOf(e.host)) && (a.preventDefault(), e.href = d.href)
+            }, !1)
+        }
+    })(document, window.navigator, "standalone");
 </script>
 
 </body>
