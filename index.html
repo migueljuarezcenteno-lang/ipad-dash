@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<title>iLegacy Web Ultra</title>
+<title>iLegacy Ultra PRO</title>
 
 <style>
 body{
@@ -11,6 +11,7 @@ margin:0;
 font-family:Arial;
 background:#000;
 color:#0f0;
+font-size:14px;
 }
 
 .header{
@@ -24,12 +25,26 @@ padding:15px;
 border-bottom:1px solid #033;
 }
 
+.screen{
+display:none;
+padding:10px;
+}
+
+.active{
+display:block;
+}
+
 input{
 width:100%;
 padding:10px;
 background:#000;
 color:#0f0;
 border:1px solid #0f0;
+}
+
+.item{
+padding:10px;
+border-bottom:1px solid #033;
 }
 </style>
 </head>
@@ -38,9 +53,11 @@ border:1px solid #0f0;
 
 <div class="header" id="clock">--:--</div>
 
-<div class="menu">
+<!-- HOME -->
+<div id="home" class="active">
 
-<div onclick="goYouTube()">📺 YouTube</div>
+<div class="menu">
+<div onclick="openApp('yt')">📺 YouTube Ultra</div>
 <div onclick="goMaps()">📍 Maps</div>
 
 <div>
@@ -49,6 +66,19 @@ border:1px solid #0f0;
 <div onclick="goSearch()">Buscar</div>
 </div>
 
+</div>
+</div>
+
+<!-- YOUTUBE -->
+<div id="yt" class="screen">
+<button onclick="home()">← Volver</button>
+
+<h3>YouTube Ultra Lite</h3>
+
+<input id="ytSearch" placeholder="Buscar videos">
+<button onclick="searchYT()">Buscar</button>
+
+<div id="results"></div>
 </div>
 
 <script>
@@ -60,50 +90,68 @@ document.getElementById("clock").innerHTML=
 d.getHours()+":"+("0"+d.getMinutes()).slice(-2);
 },1000);
 
-/* YOUTUBE CON MODOS */
-function goYouTube(){
-var mode = confirm("Modo ultra rápido (texto)?");
-var q = prompt("Buscar en YouTube:");
-
-if(!q) return;
-
-if(mode){
-location.href="https://textise.net/showtext.aspx?strURL=https://m.youtube.com/results?search_query="+q;
-}else{
-location.href="https://m.youtube.com/results?search_query="+q;
-}
+/* navegación */
+function openApp(id){
+document.getElementById("home").style.display="none";
+document.getElementById(id).style.display="block";
 }
 
-/* MAPS LITE */
+function home(){
+document.getElementById("home").style.display="block";
+document.getElementById("yt").style.display="none";
+}
+
+/* MAPS */
 function goMaps(){
 location.href="https://www.google.com/maps?force=lite";
 }
 
-/* NAVEGADOR INTELIGENTE */
+/* NAVEGADOR */
 function goSearch(){
 var q=document.getElementById("q").value;
-
 if(!q) return;
 
-/* detectar si es URL */
-var isURL = q.indexOf(".") > -1;
+var isURL = q.indexOf(".")>-1;
+var url = isURL ? (q.indexOf("http")===0?q:"https://"+q)
+                : "https://www.google.com/search?gbv=1&q="+q;
 
-/* preguntar modo */
-var mode = confirm("Modo ultra rápido (proxy)?");
-
-var url;
-
-if(isURL){
-url = q.indexOf("http")===0 ? q : "https://"+q;
-}else{
-url = "https://www.google.com/search?gbv=1&q="+q;
-}
-
-if(mode){
-location.href="https://textise.net/showtext.aspx?strURL="+url;
-}else{
 location.href=url;
 }
+
+/* YOUTUBE ULTRA PRO */
+function searchYT(){
+var q=document.getElementById("ytSearch").value;
+if(!q) return;
+
+var url="https://www.youtube.com/feeds/videos.xml?search_query="+encodeURIComponent(q);
+
+/* usar proxy para evitar bloqueo */
+var xhr=new XMLHttpRequest();
+xhr.open("GET","https://api.allorigins.win/raw?url="+encodeURIComponent(url),true);
+
+xhr.onreadystatechange=function(){
+if(xhr.readyState==4 && xhr.status==200){
+
+var xml=xhr.responseText;
+
+/* parse simple */
+var items=xml.split("<entry>");
+
+var html="";
+
+for(var i=1;i<items.length && i<10;i++){
+
+var title=items[i].split("<title>")[1].split("</title>")[0];
+var link=items[i].split("<link rel=\"alternate\" href=\"")[1].split("\"")[0];
+
+html+="<div class='item'><a href='"+link+"'>▶ "+title+"</a></div>";
+}
+
+document.getElementById("results").innerHTML=html;
+}
+};
+
+xhr.send();
 }
 
 </script>
