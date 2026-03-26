@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<title>iLegacy Ultra PRO v16</title>
+<title>iLegacy Ultra PRO v17</title>
 
 <style>
 body{
@@ -30,10 +30,6 @@ display:none;
 padding:10px;
 }
 
-.active{
-display:block;
-}
-
 input, button{
 width:100%;
 padding:10px;
@@ -50,7 +46,7 @@ border-bottom:1px solid #033;
 
 iframe{
 width:100%;
-height:200px;
+height:220px;
 border:0;
 margin-top:10px;
 }
@@ -62,9 +58,9 @@ margin-top:10px;
 <div class="header" id="clock">--:--</div>
 
 <!-- HOME -->
-<div id="home" class="active">
+<div id="home">
 <div class="menu">
-<div onclick="openApp('yt')">📺 YouTube App</div>
+<div onclick="openApp('yt')">📺 YouTube App REAL</div>
 <div onclick="goMaps()">📍 Maps</div>
 
 <div>
@@ -76,18 +72,18 @@ margin-top:10px;
 </div>
 </div>
 
-<!-- YOUTUBE APP -->
+<!-- YOUTUBE -->
 <div id="yt" class="screen">
 <button onclick="home()">← Volver</button>
 
-<h3>YouTube Ultra App</h3>
+<h3>YouTube Ultra Real</h3>
 
 <input id="ytSearch" placeholder="Buscar videos">
 <button onclick="searchYT()">Buscar</button>
 
 <div id="results"></div>
-
 <div id="player"></div>
+
 </div>
 
 <script>
@@ -109,6 +105,7 @@ function home(){
 document.getElementById("home").style.display="block";
 document.getElementById("yt").style.display="none";
 document.getElementById("player").innerHTML="";
+document.getElementById("results").innerHTML="";
 }
 
 /* MAPS */
@@ -130,19 +127,51 @@ var url = isURL
 location.href=url;
 }
 
-/* BUSCADOR YOUTUBE (SCRAP SIMPLE SIN AJAX MODERNO) */
+/* YOUTUBE REAL (RSS SIMPLE + PARSE BÁSICO) */
 function searchYT(){
 var q=document.getElementById("ytSearch").value;
 if(!q) return;
 
-/* usamos página ligera */
-var url = "https://m.youtube.com/results?search_query="+encodeURIComponent(q);
+/* RSS ligero */
+var url = "https://www.youtube.com/feeds/videos.xml?search_query="+encodeURIComponent(q);
 
-/* abrimos resultados en la misma vista */
-location.href = url;
+/* truco: cargar en iframe oculto */
+var iframe = document.createElement("iframe");
+iframe.style.display="none";
+iframe.src = url;
+
+document.body.appendChild(iframe);
+
+/* esperar y leer contenido */
+setTimeout(function(){
+
+try{
+var doc = iframe.contentDocument || iframe.contentWindow.document;
+var entries = doc.getElementsByTagName("entry");
+
+var html="";
+
+for(var i=0;i<entries.length && i<10;i++){
+
+var title = entries[i].getElementsByTagName("title")[0].textContent;
+var link = entries[i].getElementsByTagName("link")[0].getAttribute("href");
+
+/* extraer ID */
+var id = link.split("v=")[1];
+
+html += "<div class='video' onclick=\"playVideo('"+id+"')\">▶ "+title+"</div>";
 }
 
-/* REPRODUCTOR ULTRA (cuando tengamos ID) */
+document.getElementById("results").innerHTML = html;
+
+}catch(e){
+alert("Error cargando resultados (limitación iOS)");
+}
+
+},1500);
+}
+
+/* REPRODUCTOR */
 function playVideo(id){
 document.getElementById("player").innerHTML =
 "<iframe src='https://www.youtube.com/embed/"+id+"'></iframe>";
