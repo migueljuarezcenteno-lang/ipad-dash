@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<title>iLegacy Web Core</title>
+<title>iLegacy Web Ultra</title>
 
 <style>
 body{
@@ -45,7 +45,7 @@ border:1px solid #0f0;
 
 <div>
 🌐 Navegador
-<input id="q" placeholder="Buscar...">
+<input id="q" placeholder="Buscar o URL">
 <div onclick="goSearch()">Buscar</div>
 </div>
 
@@ -60,9 +60,18 @@ document.getElementById("clock").innerHTML=
 d.getHours()+":"+("0"+d.getMinutes()).slice(-2);
 },1000);
 
-/* YOUTUBE OPTIMIZADO */
+/* YOUTUBE CON MODOS */
 function goYouTube(){
-location.href="https://m.youtube.com/?persist_app=1&app=m";
+var mode = confirm("Modo ultra rápido (texto)?");
+var q = prompt("Buscar en YouTube:");
+
+if(!q) return;
+
+if(mode){
+location.href="https://textise.net/showtext.aspx?strURL=https://m.youtube.com/results?search_query="+q;
+}else{
+location.href="https://m.youtube.com/results?search_query="+q;
+}
 }
 
 /* MAPS LITE */
@@ -70,10 +79,31 @@ function goMaps(){
 location.href="https://www.google.com/maps?force=lite";
 }
 
-/* BUSCADOR */
+/* NAVEGADOR INTELIGENTE */
 function goSearch(){
 var q=document.getElementById("q").value;
-location.href="https://www.google.com/search?gbv=1&q="+q;
+
+if(!q) return;
+
+/* detectar si es URL */
+var isURL = q.indexOf(".") > -1;
+
+/* preguntar modo */
+var mode = confirm("Modo ultra rápido (proxy)?");
+
+var url;
+
+if(isURL){
+url = q.indexOf("http")===0 ? q : "https://"+q;
+}else{
+url = "https://www.google.com/search?gbv=1&q="+q;
+}
+
+if(mode){
+location.href="https://textise.net/showtext.aspx?strURL="+url;
+}else{
+location.href=url;
+}
 }
 
 </script>
