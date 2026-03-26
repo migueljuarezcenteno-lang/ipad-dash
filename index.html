@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<title>iLegacy Ultra PRO v15</title>
+<title>iLegacy Ultra PRO v16</title>
 
 <style>
 body{
@@ -34,26 +34,25 @@ padding:10px;
 display:block;
 }
 
-input{
+input, button{
 width:100%;
 padding:10px;
 background:#000;
 color:#0f0;
 border:1px solid #0f0;
-}
-
-button{
 margin-top:5px;
-padding:10px;
-background:#000;
-color:#0f0;
-border:1px solid #0f0;
-width:100%;
 }
 
-.item{
+.video{
 padding:10px;
 border-bottom:1px solid #033;
+}
+
+iframe{
+width:100%;
+height:200px;
+border:0;
+margin-top:10px;
 }
 </style>
 </head>
@@ -64,9 +63,8 @@ border-bottom:1px solid #033;
 
 <!-- HOME -->
 <div id="home" class="active">
-
 <div class="menu">
-<div onclick="openApp('yt')">📺 YouTube Ultra</div>
+<div onclick="openApp('yt')">📺 YouTube App</div>
 <div onclick="goMaps()">📍 Maps</div>
 
 <div>
@@ -78,19 +76,18 @@ border-bottom:1px solid #033;
 </div>
 </div>
 
-<!-- YOUTUBE -->
+<!-- YOUTUBE APP -->
 <div id="yt" class="screen">
 <button onclick="home()">← Volver</button>
 
-<h3>YouTube Ultra Lite</h3>
+<h3>YouTube Ultra App</h3>
 
 <input id="ytSearch" placeholder="Buscar videos">
 <button onclick="searchYT()">Buscar</button>
 
-<p style="font-size:12px;color:#888;">
-Modo optimizado para iPad antiguo (sin cargas pesadas)
-</p>
+<div id="results"></div>
 
+<div id="player"></div>
 </div>
 
 <script>
@@ -111,9 +108,10 @@ document.getElementById(id).style.display="block";
 function home(){
 document.getElementById("home").style.display="block";
 document.getElementById("yt").style.display="none";
+document.getElementById("player").innerHTML="";
 }
 
-/* MAPS (modo ligero) */
+/* MAPS */
 function goMaps(){
 location.href="https://www.google.com/maps?force=lite";
 }
@@ -132,16 +130,22 @@ var url = isURL
 location.href=url;
 }
 
-/* YOUTUBE ULTRA PRO (SIN AJAX - COMPATIBLE iOS 9) */
+/* BUSCADOR YOUTUBE (SCRAP SIMPLE SIN AJAX MODERNO) */
 function searchYT(){
 var q=document.getElementById("ytSearch").value;
 if(!q) return;
 
-/* versión móvil ligera */
+/* usamos página ligera */
 var url = "https://m.youtube.com/results?search_query="+encodeURIComponent(q);
 
-/* redirección directa (sin cuelgues) */
+/* abrimos resultados en la misma vista */
 location.href = url;
+}
+
+/* REPRODUCTOR ULTRA (cuando tengamos ID) */
+function playVideo(id){
+document.getElementById("player").innerHTML =
+"<iframe src='https://www.youtube.com/embed/"+id+"'></iframe>";
 }
 
 </script>
