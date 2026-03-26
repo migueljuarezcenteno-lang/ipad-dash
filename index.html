@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<title>iLegacy Ultra PRO</title>
+<title>iLegacy Ultra PRO v15</title>
 
 <style>
 body{
@@ -42,6 +42,15 @@ color:#0f0;
 border:1px solid #0f0;
 }
 
+button{
+margin-top:5px;
+padding:10px;
+background:#000;
+color:#0f0;
+border:1px solid #0f0;
+width:100%;
+}
+
 .item{
 padding:10px;
 border-bottom:1px solid #033;
@@ -63,7 +72,7 @@ border-bottom:1px solid #033;
 <div>
 🌐 Navegador
 <input id="q" placeholder="Buscar o URL">
-<div onclick="goSearch()">Buscar</div>
+<button onclick="goSearch()">Buscar</button>
 </div>
 
 </div>
@@ -78,7 +87,10 @@ border-bottom:1px solid #033;
 <input id="ytSearch" placeholder="Buscar videos">
 <button onclick="searchYT()">Buscar</button>
 
-<div id="results"></div>
+<p style="font-size:12px;color:#888;">
+Modo optimizado para iPad antiguo (sin cargas pesadas)
+</p>
+
 </div>
 
 <script>
@@ -101,7 +113,7 @@ document.getElementById("home").style.display="block";
 document.getElementById("yt").style.display="none";
 }
 
-/* MAPS */
+/* MAPS (modo ligero) */
 function goMaps(){
 location.href="https://www.google.com/maps?force=lite";
 }
@@ -112,46 +124,24 @@ var q=document.getElementById("q").value;
 if(!q) return;
 
 var isURL = q.indexOf(".")>-1;
-var url = isURL ? (q.indexOf("http")===0?q:"https://"+q)
-                : "https://www.google.com/search?gbv=1&q="+q;
+
+var url = isURL 
+? (q.indexOf("http")===0?q:"https://"+q)
+: "https://www.google.com/search?gbv=1&q="+encodeURIComponent(q);
 
 location.href=url;
 }
 
-/* YOUTUBE ULTRA PRO */
+/* YOUTUBE ULTRA PRO (SIN AJAX - COMPATIBLE iOS 9) */
 function searchYT(){
 var q=document.getElementById("ytSearch").value;
 if(!q) return;
 
-var url="https://www.youtube.com/feeds/videos.xml?search_query="+encodeURIComponent(q);
+/* versión móvil ligera */
+var url = "https://m.youtube.com/results?search_query="+encodeURIComponent(q);
 
-/* usar proxy para evitar bloqueo */
-var xhr=new XMLHttpRequest();
-xhr.open("GET","https://api.allorigins.win/raw?url="+encodeURIComponent(url),true);
-
-xhr.onreadystatechange=function(){
-if(xhr.readyState==4 && xhr.status==200){
-
-var xml=xhr.responseText;
-
-/* parse simple */
-var items=xml.split("<entry>");
-
-var html="";
-
-for(var i=1;i<items.length && i<10;i++){
-
-var title=items[i].split("<title>")[1].split("</title>")[0];
-var link=items[i].split("<link rel=\"alternate\" href=\"")[1].split("\"")[0];
-
-html+="<div class='item'><a href='"+link+"'>▶ "+title+"</a></div>";
-}
-
-document.getElementById("results").innerHTML=html;
-}
-};
-
-xhr.send();
+/* redirección directa (sin cuelgues) */
+location.href = url;
 }
 
 </script>
