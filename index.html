@@ -1,183 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
-<title>iLegacy Ultra PRO v17</title>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1384/1384060.png">
+    
+    <title>YouTube</title>
 
-<style>
-body{
-margin:0;
-font-family:Arial;
-background:#000;
-color:#0f0;
-font-size:14px;
-}
-
-.header{
-text-align:center;
-padding:10px;
-border-bottom:1px solid #0f0;
-}
-
-.menu div{
-padding:15px;
-border-bottom:1px solid #033;
-}
-
-.screen{
-display:none;
-padding:10px;
-}
-
-input, button{
-width:100%;
-padding:10px;
-background:#000;
-color:#0f0;
-border:1px solid #0f0;
-margin-top:5px;
-}
-
-.video{
-padding:10px;
-border-bottom:1px solid #033;
-}
-
-iframe{
-width:100%;
-height:220px;
-border:0;
-margin-top:10px;
-}
-</style>
+    <style>
+        /* Pantalla de carga ultra-minimalista para evitar el flash blanco */
+        body { 
+            background-color: #000; 
+            margin: 0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            overflow: hidden;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+        .loader { color: #ff0000; font-size: 18px; font-weight: bold; }
+    </style>
 </head>
-
 <body>
 
-<div class="header" id="clock">--:--</div>
+    <div class="loader">Iniciando YouTube...</div>
 
-<!-- HOME -->
-<div id="home">
-<div class="menu">
-<div onclick="openApp('yt')">📺 YouTube App REAL</div>
-<div onclick="goMaps()">📍 Maps</div>
+    <script>
+        /**
+         * LÓGICA DE REDIRECCIÓN AGRESIVA
+         * Usamos replace() en lugar de href para que el iPad no intente
+         * volver a esta página de carga al darle "atrás".
+         */
+        (function() {
+            // Versión móvil forzada con persistencia de App móvil
+            var ytUrl = "https://m.youtube.com/?persist_app=1&app=m";
+            
+            // Pequeño retardo de 100ms para asegurar que los metatags de iOS se activen
+            setTimeout(function() {
+                window.location.replace(ytUrl);
+            }, 100);
+        })();
 
-<div>
-🌐 Navegador
-<input id="q" placeholder="Buscar o URL">
-<button onclick="goSearch()">Buscar</button>
-</div>
-
-</div>
-</div>
-
-<!-- YOUTUBE -->
-<div id="yt" class="screen">
-<button onclick="home()">← Volver</button>
-
-<h3>YouTube Ultra Real</h3>
-
-<input id="ytSearch" placeholder="Buscar videos">
-<button onclick="searchYT()">Buscar</button>
-
-<div id="results"></div>
-<div id="player"></div>
-
-</div>
-
-<script>
-
-/* reloj */
-setInterval(function(){
-var d=new Date();
-document.getElementById("clock").innerHTML=
-d.getHours()+":"+("0"+d.getMinutes()).slice(-2);
-},1000);
-
-/* navegación */
-function openApp(id){
-document.getElementById("home").style.display="none";
-document.getElementById(id).style.display="block";
-}
-
-function home(){
-document.getElementById("home").style.display="block";
-document.getElementById("yt").style.display="none";
-document.getElementById("player").innerHTML="";
-document.getElementById("results").innerHTML="";
-}
-
-/* MAPS */
-function goMaps(){
-location.href="https://www.google.com/maps?force=lite";
-}
-
-/* NAVEGADOR */
-function goSearch(){
-var q=document.getElementById("q").value;
-if(!q) return;
-
-var isURL = q.indexOf(".")>-1;
-
-var url = isURL 
-? (q.indexOf("http")===0?q:"https://"+q)
-: "https://www.google.com/search?gbv=1&q="+encodeURIComponent(q);
-
-location.href=url;
-}
-
-/* YOUTUBE REAL (RSS SIMPLE + PARSE BÁSICO) */
-function searchYT(){
-var q=document.getElementById("ytSearch").value;
-if(!q) return;
-
-/* RSS ligero */
-var url = "https://www.youtube.com/feeds/videos.xml?search_query="+encodeURIComponent(q);
-
-/* truco: cargar en iframe oculto */
-var iframe = document.createElement("iframe");
-iframe.style.display="none";
-iframe.src = url;
-
-document.body.appendChild(iframe);
-
-/* esperar y leer contenido */
-setTimeout(function(){
-
-try{
-var doc = iframe.contentDocument || iframe.contentWindow.document;
-var entries = doc.getElementsByTagName("entry");
-
-var html="";
-
-for(var i=0;i<entries.length && i<10;i++){
-
-var title = entries[i].getElementsByTagName("title")[0].textContent;
-var link = entries[i].getElementsByTagName("link")[0].getAttribute("href");
-
-/* extraer ID */
-var id = link.split("v=")[1];
-
-html += "<div class='video' onclick=\"playVideo('"+id+"')\">▶ "+title+"</div>";
-}
-
-document.getElementById("results").innerHTML = html;
-
-}catch(e){
-alert("Error cargando resultados (limitación iOS)");
-}
-
-},1500);
-}
-
-/* REPRODUCTOR */
-function playVideo(id){
-document.getElementById("player").innerHTML =
-"<iframe src='https://www.youtube.com/embed/"+id+"'></iframe>";
-}
-
-</script>
+        // Script para mantener la navegación dentro de la App (standalone)
+        (function(a, b, c) {
+            if (c in b && b[c]) {
+                var d, e = a.location, f = /^(a|html)$/i;
+                a.addEventListener("click", function(a) {
+                    d = a.target;
+                    while (!f.test(d.nodeName)) d = d.parentNode;
+                    "href" in d && (d.href.indexOf("http") || ~d.href.indexOf(e.host)) && (a.preventDefault(), e.href = d.href)
+                }, !1)
+            }
+        })(document, window.navigator, "standalone");
+    </script>
 
 </body>
 </html>
