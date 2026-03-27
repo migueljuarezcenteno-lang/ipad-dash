@@ -1,62 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1384/1384060.png">
-    
-    <title>YouTube</title>
+<meta charset="UTF-8">
 
-    <style>
-        /* Pantalla de carga ultra-minimalista para evitar el flash blanco */
-        body { 
-            background-color: #000; 
-            margin: 0; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh; 
-            overflow: hidden;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        }
-        .loader { color: #ff0000; font-size: 18px; font-weight: bold; }
-    </style>
+<!-- MODO APP NATIVA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<!-- BLOQUEAR ZOOM Y REESCALADO -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1384/1384060.png">
+
+<title>YouTube</title>
+
+<style>
+body{
+background:#000;
+margin:0;
+display:flex;
+align-items:center;
+justify-content:center;
+height:100vh;
+overflow:hidden;
+font-family:Arial;
+}
+
+.loader{
+color:#ff0000;
+font-size:16px;
+}
+</style>
 </head>
+
 <body>
 
-    <div class="loader">Iniciando YouTube...</div>
+<div class="loader">YouTube Lite iniciando...</div>
 
-    <script>
-        /**
-         * LÓGICA DE REDIRECCIÓN AGRESIVA
-         * Usamos replace() en lugar de href para que el iPad no intente
-         * volver a esta página de carga al darle "atrás".
-         */
-        (function() {
-            // Versión móvil forzada con persistencia de App móvil
-            var ytUrl = "https://m.youtube.com/?persist_app=1&app=m";
-            
-            // Pequeño retardo de 100ms para asegurar que los metatags de iOS se activen
-            setTimeout(function() {
-                window.location.replace(ytUrl);
-            }, 100);
-        })();
+<script>
 
-        // Script para mantener la navegación dentro de la App (standalone)
-        (function(a, b, c) {
-            if (c in b && b[c]) {
-                var d, e = a.location, f = /^(a|html)$/i;
-                a.addEventListener("click", function(a) {
-                    d = a.target;
-                    while (!f.test(d.nodeName)) d = d.parentNode;
-                    "href" in d && (d.href.indexOf("http") || ~d.href.indexOf(e.host)) && (a.preventDefault(), e.href = d.href)
-                }, !1)
-            }
-        })(document, window.navigator, "standalone");
-    </script>
+/* 🚀 URL ULTRA OPTIMIZADA */
+var ytUrl = "https://m.youtube.com/?persist_app=1&app=m&noapp=1&hl=es";
+
+/* ⚡ REDIRECCIÓN INMEDIATA (sin delay) */
+window.location.replace(ytUrl);
+
+/* 🔥 MANTENER EXPERIENCIA APP (standalone) */
+(function(a, b, c) {
+if (c in b && b[c]) {
+var d, e = a.location, f = /^(a|html)$/i;
+a.addEventListener("click", function(a) {
+d = a.target;
+while (!f.test(d.nodeName)) d = d.parentNode;
+if ("href" in d && (d.href.indexOf("http") || ~d.href.indexOf(e.host))) {
+a.preventDefault();
+e.href = d.href;
+}
+}, false);
+}
+})(document, window.navigator, "standalone");
+
+/* ⚡ OPTIMIZACIÓN EXTRA: evitar volver atrás */
+history.pushState(null, null, location.href);
+window.onpopstate = function () {
+history.go(1);
+};
+
+</script>
 
 </body>
 </html>
