@@ -5,47 +5,67 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1384/1384060.png">
-    
-    <title>YouTube</title>
-
+    <title>YT Legacy</title>
     <style>
-        /* Pantalla de carga ultra-minimalista para evitar el flash blanco */
         body { 
-            background-color: #000; 
-            margin: 0; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh; 
-            overflow: hidden;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: #111; 
+            color: #fff; 
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            height: 100vh; margin: 0; 
         }
-        .loader { color: #ff0000; font-size: 18px; font-weight: bold; }
+        .app-box { width: 90%; max-width: 400px; text-align: center; }
+        .yt-logo { color: #ff0000; font-size: 45px; font-weight: bold; margin-bottom: 30px; letter-spacing: -2px; }
+        .yt-logo span { color: #fff; font-weight: 300; }
+        
+        input { 
+            width: 100%; padding: 18px; font-size: 20px; border-radius: 12px; border: none; 
+            margin-bottom: 20px; background: #222; color: white; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+        
+        button { 
+            background: #ff0000; color: white; border: none; padding: 18px; 
+            border-radius: 12px; font-size: 18px; font-weight: bold; width: 100%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        button:active { background: #cc0000; transform: translateY(2px); }
+        
+        .footer { margin-top: 40px; font-size: 11px; color: #444; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
-    <div class="loader">Iniciando YouTube...</div>
+    <div class="app-box">
+        <div class="yt-logo">YouTube <span>Legacy</span></div>
+        
+        <input type="text" id="search" placeholder="¿Qué quieres ver?" autofocus>
+        <button onclick="searchVideo()">BUSCAR VIDEO</button>
+        
+        <div class="footer">Motor de renderizado: Google Basic (No-JS)</div>
+    </div>
 
     <script>
-        /**
-         * LÓGICA DE REDIRECCIÓN AGRESIVA
-         * Usamos replace() en lugar de href para que el iPad no intente
-         * volver a esta página de carga al darle "atrás".
-         */
-        (function() {
-            // Versión móvil forzada con persistencia de App móvil
-            var ytUrl = "https://m.youtube.com/?persist_app=1&app=m";
-            
-            // Pequeño retardo de 100ms para asegurar que los metatags de iOS se activen
-            setTimeout(function() {
-                window.location.replace(ytUrl);
-            }, 100);
-        })();
+        function searchVideo() {
+            var q = document.getElementById('search').value;
+            if(q.length > 0) {
+                /**
+                 * EL TRUCO MAESTRO:
+                 * tbm=vid -> Pestaña de videos.
+                 * gbv=1   -> Google Basic Version (fuerza HTML de 2010, sin scripts pesados).
+                 * Esto cargará una lista de videos ultra-rápida.
+                 */
+                var legacyUrl = "https://www.google.com/search?q=" + encodeURIComponent(q) + "&tbm=vid&gbv=1";
+                window.location.replace(legacyUrl);
+            }
+        }
 
-        // Script para mantener la navegación dentro de la App (standalone)
+        // Ejecutar búsqueda con el botón 'Intro' del teclado del iPad
+        document.getElementById('search').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') { searchVideo(); }
+        });
+
+        // Mantener la navegación dentro de la web-app
         (function(a, b, c) {
             if (c in b && b[c]) {
                 var d, e = a.location, f = /^(a|html)$/i;
