@@ -3,16 +3,14 @@
 <head>
 <meta charset="UTF-8">
 
-<!-- MODO APP -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-<!-- VIEWPORT BLOQUEADO -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1384/1384060.png">
 
-<title>YouTube Turbo</title>
+<title>YouTube Turbo Stable</title>
 
 <style>
 body{
@@ -26,15 +24,13 @@ overflow:hidden;
 font-family:Arial;
 }
 
-/* pantalla limpia sin parpadeos */
 .loader{
 color:#ff0000;
 font-size:14px;
-opacity:0.9;
 }
 </style>
 
-<!-- ⚡ PRE-CONEXIÓN (clave real) -->
+<!-- PRECONEXIÓN -->
 <link rel="dns-prefetch" href="https://m.youtube.com">
 <link rel="preconnect" href="https://m.youtube.com">
 
@@ -42,25 +38,19 @@ opacity:0.9;
 
 <body>
 
-<div class="loader">Cargando modo turbo...</div>
+<div class="loader">Iniciando YouTube estable...</div>
 
 <script>
 
-/* 🚀 URL OPTIMIZADA */
-var ytUrl = "https://m.youtube.com/?persist_app=1&app=m&noapp=1&hl=es";
+/* 🚀 URL CON MODO ANTIGUO */
+var ytUrl = "https://m.youtube.com/?persist_app=1&app=m&disable_polymer=1";
 
-/* ⚡ PRELOAD INVISIBLE */
-var link = document.createElement("link");
-link.rel = "prefetch";
-link.href = ytUrl;
-document.head.appendChild(link);
-
-/* ⚡ REDIRECCIÓN ULTRA RÁPIDA */
+/* REDIRECCIÓN */
 setTimeout(function(){
 window.location.replace(ytUrl);
 }, 50);
 
-/* 🔥 MODO APP (mantener dentro) */
+/* MODO APP */
 (function(a, b, c) {
 if (c in b && b[c]) {
 var d, e = a.location, f = /^(a|html)$/i;
@@ -75,7 +65,7 @@ e.href = d.href;
 }
 })(document, window.navigator, "standalone");
 
-/* ⚡ BLOQUEAR RETROCESO (fluidez) */
+/* BLOQUEAR BACK */
 history.pushState(null, null, location.href);
 window.onpopstate = function () {
 history.go(1);
