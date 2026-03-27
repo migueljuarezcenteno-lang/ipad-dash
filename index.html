@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 
-<!-- MODO APP NATIVA -->
+<!-- MODO APP -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-<!-- BLOQUEAR ZOOM Y REESCALADO -->
+<!-- VIEWPORT BLOQUEADO -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1384/1384060.png">
 
-<title>YouTube</title>
+<title>YouTube Turbo</title>
 
 <style>
 body{
@@ -26,26 +26,41 @@ overflow:hidden;
 font-family:Arial;
 }
 
+/* pantalla limpia sin parpadeos */
 .loader{
 color:#ff0000;
-font-size:16px;
+font-size:14px;
+opacity:0.9;
 }
 </style>
+
+<!-- ⚡ PRE-CONEXIÓN (clave real) -->
+<link rel="dns-prefetch" href="https://m.youtube.com">
+<link rel="preconnect" href="https://m.youtube.com">
+
 </head>
 
 <body>
 
-<div class="loader">YouTube Lite iniciando...</div>
+<div class="loader">Cargando modo turbo...</div>
 
 <script>
 
-/* 🚀 URL ULTRA OPTIMIZADA */
+/* 🚀 URL OPTIMIZADA */
 var ytUrl = "https://m.youtube.com/?persist_app=1&app=m&noapp=1&hl=es";
 
-/* ⚡ REDIRECCIÓN INMEDIATA (sin delay) */
-window.location.replace(ytUrl);
+/* ⚡ PRELOAD INVISIBLE */
+var link = document.createElement("link");
+link.rel = "prefetch";
+link.href = ytUrl;
+document.head.appendChild(link);
 
-/* 🔥 MANTENER EXPERIENCIA APP (standalone) */
+/* ⚡ REDIRECCIÓN ULTRA RÁPIDA */
+setTimeout(function(){
+window.location.replace(ytUrl);
+}, 50);
+
+/* 🔥 MODO APP (mantener dentro) */
 (function(a, b, c) {
 if (c in b && b[c]) {
 var d, e = a.location, f = /^(a|html)$/i;
@@ -60,7 +75,7 @@ e.href = d.href;
 }
 })(document, window.navigator, "standalone");
 
-/* ⚡ OPTIMIZACIÓN EXTRA: evitar volver atrás */
+/* ⚡ BLOQUEAR RETROCESO (fluidez) */
 history.pushState(null, null, location.href);
 window.onpopstate = function () {
 history.go(1);
